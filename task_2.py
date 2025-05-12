@@ -1,68 +1,79 @@
+import logging
 from abc import ABC, abstractmethod
+from typing import List
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+
 
 class Book:
-    def __init__(self, title, author, year):
+    def __init__(self, title: str, author: str, year: str) -> None:
         self.title = title
         self.author = author
         self.year = year
 
-    def __str__(self):
-        return f'Title: {self.title}, Author: {self.author}, Year: {self.year}'
+    def __str__(self) -> str:
+        return f"Title: {self.title}, Author: {self.author}, Year: {self.year}"
 
 
 class LibraryInterface(ABC):
     @abstractmethod
-    def add_book(self, title, author, year):
+    def add_book(self, title: str, author: str, year: str) -> None:
         pass
 
     @abstractmethod
-    def remove_book(self, title):
+    def remove_book(self, title: str) -> None:
         pass
 
     @abstractmethod
-    def show_books(self):
+    def show_books(self) -> None:
         pass
 
     @abstractmethod
-    def search_book(self, title):
+    def search_book(self, title: str) -> None:
         pass
+
 
 class Library(LibraryInterface):
-    def __init__(self):
-        self.books = []
+    def __init__(self) -> None:
+        self.books: List[Book] = []
 
-    def add_book(self, title, author, year):
+    def add_book(self, title: str, author: str, year: str) -> None:
         book = Book(title, author, year)
         self.books.append(book)
 
-    def remove_book(self, title):
+    def remove_book(self, title: str) -> None:
         for book in self.books:
             if book.title == title:
                 self.books.remove(book)
                 break
         else:
-            print(f"Book with title '{title}' not found.")
+            logging.info(f"Book with title '{title}' not found.")
 
-    def show_books(self):
+    def show_books(self) -> None:
         for book in self.books:
-            print(book)
-            
-    def search_book(self, title):
+            logging.info(book)
+
+    def search_book(self, title: str) -> None:
         found = [book for book in self.books if book.title == title]
         if found:
             for book in found:
-                print(book)
+                logging.info(book)
         else:
-            print(f"Book with title '{title}' not found.")
+            logging.info(f"Book with title '{title}' not found.")
+
 
 class LibraryManager:
-    def __init__(self, library: LibraryInterface):
+    def __init__(self, library: LibraryInterface) -> None:
         self.library = library
 
-    def run(self):
+    def run(self) -> None:
         while True:
-            command = input("Enter command (add, remove, show, search, exit): ").strip().lower()
-            
+            command = (
+                input("Enter command (add, remove, show, search, exit): ")
+                .strip()
+                .lower()
+            )
+
             if command == "add":
                 title = input("Enter book title: ").strip()
                 author = input("Enter book author: ").strip()
@@ -79,13 +90,14 @@ class LibraryManager:
             elif command == "exit":
                 break
             else:
-                print("Invalid command. Please try again.")
+                logging.info("Invalid command. Please try again.")
 
-def main():
+
+def main() -> None:
     library = Library()
     manager = LibraryManager(library)
     manager.run()
 
+
 if __name__ == "__main__":
     main()
-

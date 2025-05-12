@@ -1,81 +1,90 @@
 from abc import ABC, abstractmethod
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+
 
 class Vehicle(ABC):
     @abstractmethod
-    def start_engine(self):
+    def start_engine(self) -> None:
         pass
 
 
 class Car(Vehicle):
-    def __init__(self, make, model):
+    def __init__(self, make: str, model: str) -> None:
         self.make = make
         self.model = model
 
-    def start_engine(self):
-        print(f"{self.make} {self.model}: Двигун запущено")
+    def start_engine(self) -> None:
+        logging.info(f"{self.make} {self.model}: Двигун запущено")
+
 
 class Motorcycle(Vehicle):
-    def __init__(self, make, model):
+    def __init__(self, make: str, model: str) -> None:
         self.make = make
         self.model = model
 
-    def start_engine(self):
-        print(f"{self.make} {self.model}: Мотор заведено")
+    def start_engine(self) -> None:
+        logging.info(f"{self.make} {self.model}: Мотор заведено")
+
 
 class VehicleFactory(ABC):
     @classmethod
     @abstractmethod
-    def create_car(cls, make):
+    def create_car(cls, make: str) -> Car:
         pass
 
     @classmethod
     @abstractmethod
-    def create_motorcycle(cls, make):
+    def create_motorcycle(cls, make: str) -> Motorcycle:
         pass
+
 
 class USVehicleFactory(VehicleFactory):
     @classmethod
-    def create_car(cls, make):
-        return Car(make, 'US Spec')
+    def create_car(cls, make: str) -> Car:
+        return Car(make, "US Spec")
 
     @classmethod
-    def create_motorcycle(cls, make):
-        return Motorcycle(make, 'US Spec')
+    def create_motorcycle(cls, make: str) -> Motorcycle:
+        return Motorcycle(make, "US Spec")
+
 
 class EUVehicleFactory(VehicleFactory):
     @classmethod
-    def create_car(cls, make):
-        return Car(make, 'EU Spec')
+    def create_car(cls, make: str) -> Car:
+        return Car(make, "EU Spec")
 
     @classmethod
-    def create_motorcycle(cls, make):
-        return Motorcycle(make, 'EU Spec')
+    def create_motorcycle(cls, make: str) -> Motorcycle:
+        return Motorcycle(make, "EU Spec")
+
 
 # # Використання
 
-def get_vehicle_factory(country):
-    if country == 'US':
+
+def get_vehicle_factory(country: str) -> VehicleFactory:
+    if country == "US":
         return USVehicleFactory()
-    elif country == 'EU':
+    elif country == "EU":
         return EUVehicleFactory()
     else:
         raise ValueError(f"Unsupported country: {country}")
 
-def create_vehicle(factory, vehicle_type, make):
-    if vehicle_type == 'car':
+
+def create_vehicle(factory: VehicleFactory, vehicle_type: str, make: str) -> Vehicle:
+    if vehicle_type == "car":
         return factory.create_car(make)
-    elif vehicle_type == 'motorcycle':
+    elif vehicle_type == "motorcycle":
         return factory.create_motorcycle(make)
     else:
         raise ValueError(f"Unsupported vehicle type: {vehicle_type}")
 
 
-toyotaCar = create_vehicle(get_vehicle_factory('US'), 'car', 'Toyota')
+toyotaCar = create_vehicle(get_vehicle_factory("US"), "car", "Toyota")
 
-print(toyotaCar)
+logging.info(toyotaCar)
 
-toyotaMotorcycle = create_vehicle(get_vehicle_factory('US'), 'motorcycle', 'Toyota')
+toyotaMotorcycle = create_vehicle(get_vehicle_factory("US"), "motorcycle", "Toyota")
 
-print(toyotaMotorcycle)
-
-
+logging.info(toyotaMotorcycle)
