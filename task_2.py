@@ -1,8 +1,8 @@
-import logging
 from abc import ABC, abstractmethod
 from typing import List
+from logger import get_logger
 
-logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger = get_logger()
 
 
 class Book:
@@ -47,19 +47,19 @@ class Library(LibraryInterface):
                 self.books.remove(book)
                 break
         else:
-            logging.info(f"Book with title '{title}' not found.")
+            logger.info(f"Book with title '{title}' not found.")
 
     def show_books(self) -> None:
         for book in self.books:
-            logging.info(book)
+            logger.info(book)
 
     def search_book(self, title: str) -> None:
         found = [book for book in self.books if book.title == title]
         if found:
             for book in found:
-                logging.info(book)
+                logger.info(book)
         else:
-            logging.info(f"Book with title '{title}' not found.")
+            logger.info(f"Book with title '{title}' not found.")
 
 
 class LibraryManager:
@@ -90,7 +90,7 @@ class LibraryManager:
             elif command == "exit":
                 break
             else:
-                logging.info("Invalid command. Please try again.")
+                logger.info("Invalid command. Please try again.")
 
 
 def main() -> None:
